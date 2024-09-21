@@ -1,4 +1,4 @@
-version: '2'
+#version: '2'
 
 services:
   zookeeper:
@@ -19,6 +19,7 @@ services:
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'  # Enable auto topic creation
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
@@ -30,3 +31,7 @@ services:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9093
       KAFKA_CLUSTERS_0_ZOOKEEPER: zookeeper:2181
+
+  order-validator:
+    build: src/validator
+    command: python3 order_validator.py
