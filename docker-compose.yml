@@ -24,7 +24,8 @@ services:
     command: >
       bash -c "
         kafka-topics.sh --create --bootstrap-server kafka:29092 --replication-factor 1 --partitions 1 --topic orders &&
-        kafka-topics.sh --create --bootstrap-server kafka:29092 --replication-factor 1 --partitions 1 --topic validated-orders"
+        kafka-topics.sh --create --bootstrap-server kafka:29092 --replication-factor 1 --partitions 1 --topic validated-orders &&
+        kafka-topics.sh --create --bootstrap-server kafka:29092 --replication-factor 1 --partitions 1 --topic stock-updated-orders"
     restart: "on-failure"
 
   kafka-ui:
@@ -45,3 +46,14 @@ services:
       - kafka
       - zookeeper
       - topic-init
+
+  inventory-service:
+    build: ./src/inventory_service
+    command: bash -c "sleep 30 && python3 inventory_service.py"
+    environment:
+      KAFKA_BOOTSTRAP_SERVERS: kafka:29092
+    depends_on:
+      - kafka
+      - zookeeper
+      - topic-init
+      - order-validator

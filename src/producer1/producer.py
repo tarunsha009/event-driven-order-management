@@ -19,7 +19,7 @@ def create_kafka_producer():
 def produce_orders():
     producer = create_kafka_producer()
     for i in range(11, 20):
-        order = {'order_id': i, 'product': 'Widget', 'quantity': i + 1}
+        order = {'order_id': i, 'product': 'item', 'quantity': i + 1}
         producer.produce(KAFKA_TOPIC, value=json.dumps(order), callback=delivery_report)
         producer.flush()  # Wait for all messages to be delivered
         print(f"Sent: {order}")
